@@ -1,0 +1,161 @@
+definitions:
+  img_service.GetListResponse:
+    properties:
+      count:
+        type: integer
+      imgs:
+        items:
+          $ref: '#/definitions/img_service.Img'
+        type: array
+    type: object
+  img_service.Img:
+    properties:
+      body:
+        description: binary image
+        items:
+          type: integer
+        type: array
+      created_at:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Response:
+    properties:
+      data: {}
+      description:
+        type: string
+      status:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Image Client
+  title: Swagger API
+paths:
+  /img:
+    get:
+      consumes:
+      - application/json
+      description: List all images
+      operationId: get_imgs
+      parameters:
+      - in: query
+        name: limit
+        type: string
+      - in: query
+        name: offset
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Images Retrieved Successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/img_service.GetListResponse'
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: List Imgs
+      tags:
+      - Img
+    post:
+      consumes:
+      - multipart/form-data
+      description: Save an image
+      operationId: create_img
+      parameters:
+      - description: img
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Image Saved Successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/img_service.Img'
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Create Img
+      tags:
+      - Img
+  /img/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get image by ID
+      operationId: get_img_by_id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - multipart/form-data
+      responses:
+        "200":
+          description: Image Retrieved Successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Get Img By ID
+      tags:
+      - Img
+swagger: "2.0"
